@@ -16,9 +16,10 @@ function getCenterPoint(...)
 end
 
 -- https://stackoverflow.com/questions/12161277/how-to-rotate-a-vertex-around-a-certain-point
-function rotatePoints(ang, center, poly)
+function rotatePoints(ang, poly)
     local points = {}
     local newPoints = {}
+    local center = getCenterPoint(unpack(points))
     for i=1, poly.getPointCount, 1 do
         table.insert(points, table.pack(poly.getPoint(i)))
     end
