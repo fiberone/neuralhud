@@ -19,6 +19,10 @@ end
 function rotatePoints(ang, poly)
     local points = {}
     local newPoints = {}
+    if poly == nil then
+        printError("no poly object, is it possible you meant to use polyobj:rotate instead?")
+        return
+    end
     local center = poly.center
     for i=1, poly.getPointCount(), 1 do
         table.insert(points, table.pack(poly.getPoint(i)))
@@ -48,7 +52,5 @@ function medialPolygon(cx, cy, r, sides, color)
       table.insert(points, {ptx, pty} )
     end
     table.insert(points, #points+1, color)
-    return points, (function (x) x.center = {x=cx, y=cy} x.rotate = function(ang) rotatePoints(math.rad(ang)) end end)
+    return points, function (x) x.center = {x=cx, y=cy} x.rotate = function(poly, ang) rotatePoints(math.rad(ang), poly) end end
 end
-
-function 
