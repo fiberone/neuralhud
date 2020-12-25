@@ -4,8 +4,8 @@ function getCenterPoint(...)
     local y = {}
     local points = {...}
     for i, point in pairs(points) do
-        table.insert(x, point.x)
-        table.insert(y, point.y)
+        table.insert(x, point[1])
+        table.insert(y, point[2])
     end
     maxx = math.max(table.unpack(x))
     minx = math.min(table.unpack(x))
@@ -19,8 +19,8 @@ end
 function rotatePoints(ang, poly)
     local points = {}
     local newPoints = {}
-    local center = getCenterPoint(unpack(points))
-    for i=1, poly.getPointCount, 1 do
+    local center = poly.center
+    for i=1, poly.getPointCount(), 1 do
         table.insert(points, table.pack(poly.getPoint(i)))
     end
     --local shifted = {} 
@@ -30,8 +30,8 @@ function rotatePoints(ang, poly)
     local r
     for i, point in pairs(points) do
         --r = math.sqrt((point.x-center.x)^2+(point.y-center.y)^2)
-        local ptx = center.x + ( math.cos(ang) * (point.x-center.x) + math.sin(ang) * (point.y -center.y))
-        local pty = center.y + ( -math.sin(ang) * (point.x-center.x) + math.cos(ang) * (point.y -center.y))
+        local ptx = center.x + ( math.cos(ang) * (point[1]-center.x) + math.sin(ang) * (point[2] -center.y))
+        local pty = center.y + ( -math.sin(ang) * (point[1]-center.x) + math.cos(ang) * (point[2] -center.y))
         poly.setPoint(i, ptx, pty)
     end
     return newPoints
@@ -47,5 +47,8 @@ function medialPolygon(cx, cy, r, sides, color)
       ptx, pty = tonumber(string.format("%.0f", ptx)),tonumber(string.format("%.0f", pty))
       table.insert(points, {ptx, pty} )
     end
-    return points, color
+    table.insert(points, #points+1, color)
+    return points, (function (x) x.center = {x=cx, y=cy} x.rotate = function(ang) rotatePoints(math.rad(ang)) end end)
 end
+
+function 
